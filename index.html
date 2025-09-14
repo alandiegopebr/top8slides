@@ -7,8 +7,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 54px;
+            height: 54px;
+            background: #fff;
+            color: #a78bfa;
+            font-size: 2.2rem;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 900;
+            border: 2.5px solid #a78bfa;
+            border-radius: 50%;
+            box-shadow: 0 2px 16px #a78bfa33, 0 1.5px 8px #0001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s, transform 0.2s;
+            outline: none;
+            opacity: 0.98;
+        }
+        .nav-arrow:focus {
+            outline: 3px solid #a78bfa;
+            border-color: #f472b6;
+        }
+        .nav-arrow:hover {
+            background: #a78bfa;
+            color: #fff;
+            border-color: #f472b6;
+            transform: translateY(-50%) scale(1.13) rotate(-2deg);
+            box-shadow: 0 8px 32px #f472b655, 0 2px 12px #0002;
+        }
+        .left-arrow {
+            left: 24px;
+        }
+        .right-arrow {
+            right: 24px;
+        }
+        @media (max-width: 900px) {
+            .nav-arrow {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            .left-arrow { left: 2px; }
+            .right-arrow { right: 2px; }
+        }
         body {
             font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #f3e7e9 0%, #e3eeff 100%);
         }
         .slide {
             display: none;
@@ -26,36 +76,43 @@
             0% { transform: scale(0.95); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-        .image-placeholder {
-            background: linear-gradient(135deg, #f3f4f6 60%, #e0c3fc 100%);
-            border: 3px dashed #a78bfa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #7c3aed;
-            font-weight: 700;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+        .slide .bg-white {
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 8px 32px 0 #a78bfa33, 0 1.5px 8px 0 #0001;
+            backdrop-filter: blur(16px) saturate(1.2);
+            border-radius: 2.5rem;
+            border: 1.5px solid #fff3;
+        }
+        .slide h2, .slide h1 {
+            font-family: 'Montserrat', Arial, sans-serif;
+            letter-spacing: 1.5px;
+            background: linear-gradient(90deg, #a78bfa 0%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 12px #a78bfa33;
+        }
+        .friend-image {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 8px 32px 0 #a78bfa33, 0 1.5px 8px 0 #0001;
+            border: 4px solid #fff;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: #fff8;
+        }
+        .friend-image:hover {
+            transform: scale(1.09) rotate(-2deg);
+            box-shadow: 0 16px 48px 0 #f472b655, 0 2px 12px 0 #0002;
         }
         .cover-image {
             width: 100%;
             height: 100vh;
             object-fit: cover;
-            filter: brightness(0.85) blur(1px);
-        }
-        .friend-image {
-            width: 260px;
-            height: 260px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 8px 32px 0 rgba(124,58,237,0.25), 0 1.5px 8px 0 rgba(0,0,0,0.10);
-            border: 5px solid #fff;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .friend-image:hover {
-            transform: scale(1.07) rotate(-2deg);
-            box-shadow: 0 12px 40px 0 #a78bfa99, 0 2px 12px 0 #0002;
+            filter: brightness(0.92) blur(0.5px);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px #a78bfa33;
         }
         .navigation {
             position: fixed;
@@ -73,7 +130,9 @@
             font-family: 'Montserrat', Arial, sans-serif;
             font-size: 1.3rem;
             letter-spacing: 1px;
-            box-shadow: 0 2px 12px 0 #0001;
+            box-shadow: 0 2px 12px 0 #a78bfa33;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(8px);
         }
         .modern-btn {
             background: linear-gradient(90deg, #a78bfa 0%, #f472b6 100%);
@@ -87,21 +146,25 @@
             padding: 0.9rem 2.5rem;
             transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            outline: none;
+        }
+        .modern-btn:focus {
+            outline: 3px solid #a78bfa;
         }
         .modern-btn:hover {
             background: linear-gradient(90deg, #f472b6 0%, #a78bfa 100%);
             transform: translateY(-3px) scale(1.04);
             box-shadow: 0 8px 32px 0 #f472b655;
         }
-        .slide .bg-white {
-            background: linear-gradient(120deg, #fff 80%, #e0c3fc 100%);
-            box-shadow: 0 8px 32px 0 #a78bfa22, 0 1.5px 8px 0 #0001;
+        .bg-red-100, .bg-blue-100, .bg-pink-100, .bg-yellow-100, .bg-indigo-100, .bg-purple-100 {
+            background: rgba(255,255,255,0.45) !important;
+            border-radius: 1.2rem;
+            box-shadow: 0 2px 8px #a78bfa11;
         }
-        .slide h2 {
-            font-family: 'Montserrat', Arial, sans-serif;
-            letter-spacing: 1px;
+        .text-lg, .text-xl, .text-2xl, .text-4xl, .text-6xl {
+            text-shadow: 0 1px 4px #fff8;
         }
-        @media (max-width: 600px) {
+        @media (max-width: 900px) {
             .friend-image {
                 width: 140px;
                 height: 140px;
@@ -109,26 +172,45 @@
             .slide .bg-white {
                 padding: 1.2rem !important;
             }
+            .cover-image {
+                height: 60vw;
+            }
+        }
+        @media (max-width: 600px) {
+            .friend-image {
+                width: 90px;
+                height: 90px;
+            }
+            .slide .bg-white {
+                padding: 0.5rem !important;
+            }
+            .cover-image {
+                height: 40vw;
+            }
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 font-sans">
     
+    <!-- Fundo animado -->
+    <div id="bg-animated"></div>
     <!-- Slide Counter -->
-    <div class="slide-counter bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white font-bold">
-        <span id="currentSlide">1</span> / <span id="totalSlides">9</span>
+    <div class="slide-counter px-6 py-3 text-white font-extrabold shadow-lg" style="background:rgba(30,30,60,0.25);backdrop-filter:blur(8px);border-radius:2rem;">
+    <span id="currentSlide">1</span> / <span id="totalSlides">10</span>
     </div>
 
     <!-- Slide 1: Capa -->
     <div class="slide active min-h-screen flex items-center justify-center bg-black" id="slide-0">
         <div class="flex flex-col items-center w-full">
-            <img src="capa.png" alt="Capa da apresentação" style="max-width:100vw; max-height:90vh; object-fit:contain; display:block; margin:0 auto; background:#222; border-radius:2rem; box-shadow:0 8px 32px #0005;" />
+            <img src="capa.png" alt="Capa da apresentação" style="max-width:100vw; max-height:80vh; object-fit:contain; display:block; margin:0 auto; background:#222; border-radius:2.5rem; box-shadow:0 12px 48px #a78bfa55; border:8px solid #fff8;" />
+            <h1 class="text-6xl font-extrabold mt-10 mb-4 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-lg animate-pulse" style="letter-spacing:2px;">OS 8 AMIGOS</h1>
+            <p class="text-2xl text-white/90 font-bold mb-2 text-center">Uma apresentação épica e hilária!</p>
         </div>
     </div>
 
     <!-- Slide 2: Ytallo -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-1">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
                 <img src="v.png" alt="Foto de Alan Diego" class="friend-image" />
@@ -152,7 +234,7 @@
 
     <!-- Slide 3: José Carlos -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-2">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
                 <img src="carlos.png" alt="Foto de Alan Diego" class="friend-image" />
@@ -176,7 +258,7 @@
 
     <!-- Slide 4: Amigo 3 -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-3">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
                 <img src="kkk.png" alt="Foto de Alan Diego" class="friend-image" />
@@ -200,7 +282,7 @@
 
     <!-- Slide 5: Jonatha -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-4">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
                 <img src="jonatha.png" alt="Foto de Alan Diego" class="friend-image" />
@@ -224,7 +306,7 @@
 
     <!-- Slide 6: Diego -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-5">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
                 <img src="di.png" alt="Foto de Alan Diego" class="friend-image" />
@@ -248,7 +330,7 @@
 
     <!-- Slide 7: Leandro -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-6">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
                 <img src="leo.png" alt="Foto de Alan Diego" class="friend-image" />
@@ -272,7 +354,7 @@
 
     <!-- Slide 8: José Everaldo -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-7">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="flex-shrink-0">
                 <img src="everaldo.png" alt="Foto de José Everaldo" class="friend-image" />
             </div>
@@ -294,20 +376,28 @@
 
     <!-- Slide 9: Vídeo Especial -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-8">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-3xl w-full flex flex-col items-center gap-8">
-            <h2 class="text-4xl font-bold text-pink-600 mb-6 text-center w-full">🎬 Momento Especial</h2>
-            <div class="w-full flex justify-center">
-                <video id="videoEspecial" controls preload="auto" style="max-width: 720px; width: 100%; border-radius: 1.5rem; box-shadow: 0 8px 32px #a78bfa22; background: #000; display: block; margin: 0 auto;">
-                    <source src="video.mp4" type="video/mp4">
-                    Seu navegador não suporta o elemento de vídeo.
-                </video>
+        <div class="glass-card w-full flex flex-col items-center justify-center">
+            <h2 class="text-5xl font-extrabold mb-8 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-lg animate-pulse" style="letter-spacing:2px;">🎬 Momento Especial</h2>
+            <div class="flex justify-center items-center w-full">
+                <div style="background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%); padding: 8px; border-radius: 2.5rem; box-shadow: 0 12px 48px #a78bfa55, 0 2px 12px #0002; animation: borderPulse 2s infinite alternate;">
+                    <video id="videoEspecial" controls preload="auto" style="max-width: 900px; width: 90vw; min-width: 280px; border-radius: 2rem; background: #000; display: block; box-shadow: 0 8px 32px #a78bfa55; outline: none;">
+                        <source src="video.mp4" type="video/mp4">
+                        Seu navegador não suporta o elemento de vídeo.
+                    </video>
+                </div>
             </div>
         </div>
+        <style>
+        @keyframes borderPulse {
+            0% { box-shadow: 0 0 0 8px #f472b655, 0 8px 32px #a78bfa55; }
+            100% { box-shadow: 0 0 0 20px #a78bfa33, 0 16px 64px #f472b655; }
+        }
+        </style>
     </div>
 
     <!-- Slide 9: Alan Diego -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-9">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
                 <img src="eu.png" alt="Foto de Alan Diego" class="friend-image" />
@@ -330,14 +420,7 @@
     </div>
 
     <!-- Navigation -->
-    <div class="navigation flex gap-4">
-        <button onclick="previousSlide()" class="modern-btn shadow-lg">
-            ← Anterior
-        </button>
-        <button onclick="nextSlide()" class="modern-btn shadow-lg">
-            Próximo →
-        </button>
-    </div>
+    <!-- Navegação por teclado ativada, setas removidas -->
 
     <script>
         // Forçar o vídeo a iniciar com som (se permitido pelo navegador)
@@ -346,6 +429,7 @@
             if(video) {
                 video.volume = 1.0;
                 video.muted = false;
+                video.style.outline = 'none';
             }
         });
         let currentSlideIndex = 0;
