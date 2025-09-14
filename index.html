@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação dos Amigos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .slide {
+            display: none;
+        }
+        .slide.active {
+            display: flex;
+        }
+        .image-placeholder {
+            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+            border: 3px dashed #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cover-image {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+        }
+        .friend-image {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 font-sans">
+    
+    <!-- Slide Counter -->
+    <div class="slide-counter bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white font-bold">
+        <span id="currentSlide">1</span> / <span id="totalSlides">9</span>
+    </div>
+
+    <!-- Slide 1: Capa -->
+    <div class="slide active min-h-screen flex flex-col justify-center items-center relative" id="slide-0">
+        <div class="image-placeholder cover-image absolute inset-0">
+            <div class="text-2xl">📸 Adicione sua imagem de capa aqui</div>
+        </div>
+        <div class="relative z-10 text-center bg-black/50 backdrop-blur-sm rounded-3xl p-12 mx-4">
+            <h1 class="text-6xl font-bold text-white mb-6 animate-pulse">🎉 OS 8 AMIGOS 🎉</h1>
+            <p class="text-2xl text-yellow-300 mb-8">Uma apresentação épica e hilária!</p>
+            <div class="text-lg text-white/90">
+                Prepare-se para conhecer os personagens mais incríveis desta turma! 😂
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Ytallo -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-1">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>Ytallo</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-purple-600 mb-4">👑 YTALLO</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "Rei deles" 👑
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    É o cubytallo, não tem muito o que falar sobre ele, esse só trás confusão!!! 💔💣
+                </p>
+                <div class="bg-red-100 rounded-lg p-4">
+                    <strong class="text-red-800">Frase marcante:</strong> 
+                    <em class="text-red-700">"Eu sou o rei aqui!"</em> 👑
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: José Carlos -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-2">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>José Carlos</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-blue-600 mb-4">🩸🗡️⚰️ JOSÉ CARLOS</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "Lula, faz o L" 
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    Simplismente não sei de nada, eu não vejo ele, somente as tatuagens flutuando 👻🎨
+                </p>
+                <div class="bg-blue-100 rounded-lg p-4">
+                    <strong class="text-blue-800">Frase marcante:</strong> 
+                    <em class="text-blue-700">"LEANDRO PARA DE RESPIRAR, TÔ FICANDO SEM AR! 💀☠️"</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Amigo 3 -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-3">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>Naman</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-pink-600 mb-4">💀☠️ NAMAN</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "Hornet da Silva" 
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    O suposto quietinho, mas se se soltar saia da frente 🔥🔥🔥🔥
+                </p>
+                <div class="bg-pink-100 rounded-lg p-4">
+                    <strong class="text-pink-800">Frase marcante:</strong> 
+                    <em class="text-pink-700">"Eu quero jogar silksong 💔"</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Jonatha -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>Jonatha</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-green-600 mb-4">💔 JONATHA</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "Inimigo do namoro" 💔
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    É simplesmente o arqui rival do cupido💘💔
+                </p>
+                <div class="bg-red-100 rounded-lg p-4">
+                    <strong class="text-red-800">Frase marcante:</strong> 
+                    <em class="text-red-700">"PARA ALAN!!! 💢😡"</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Diego -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-5">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>Diego</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-red-600 mb-4"> DIEGO 💔</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "O incansável" ⚡
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    Para mano, por favor para😭😭😭😭😭
+                </p>
+                <div class="bg-red-100 rounded-lg p-4">
+                    <strong class="text-red-800">Frase marcante:</strong> 
+                    <em class="text-red-700">"Eu vou me trancar no quarto e sumir por uma semana para jogar silksong"</em> 🎮
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Leandro -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-6">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>Leandro</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-yellow-600 mb-4">🌪️ LEANDRO</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "Aspirador de pó" 🌪️
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    Se o cara respirar fundo a Terra some, então amigo nunca respire fundo! 😜🤭
+                </p>
+                <div class="bg-yellow-100 rounded-lg p-4">
+                    <strong class="text-yellow-800">Frase marcante:</strong> 
+                    <em class="text-yellow-700">"Fé"</em> 🙏
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: José Everaldo -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-7">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>José Everaldo</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-indigo-600 mb-4">⚡ JOSÉ EVERALDO 🪄</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "Harry Potter, domador de cavalas e fundador da comunidade das mulheres homosexuais" ⚡🐴
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    O inimigo do amor 2.0, o grande mágico que sabe manusear a varinha, o transformador de mulheres, por favor, pare com os cavalos😭😭😭😡🔥🔥
+                </p>
+                <div class="bg-indigo-100 rounded-lg p-4">
+                    <strong class="text-indigo-800">Frase marcante:</strong> 
+                    <em class="text-indigo-700">"Você quer ver minha lista das meninas cavala, morena?"</em> 📜
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Alan Diego -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-8">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
+            <div class="image-placeholder friend-image flex-shrink-0">
+                <div class="text-sm">📸 Foto do<br>Alan Diego</div>
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold text-purple-600 mb-4">⭐ ALAN DIEGO 🗿🍷</h2>
+                <div class="text-xl text-gray-700 mb-4">
+                    <strong>Apelido:</strong> "A perfeição" ⭐
+                </div>
+                <p class="text-lg text-gray-600 mb-4">
+                    É tão perfeito que palavras não podem descrever ele! 🔥🔥🔥
+                </p>
+                <div class="bg-purple-100 rounded-lg p-4">
+                    <strong class="text-purple-800">Frase marcante:</strong> 
+                    <em class="text-purple-700">"Naman é gay! 🤭"</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation flex gap-4">
+        <button onclick="previousSlide()" class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full font-bold transition-all duration-300 flex items-center gap-2">
+            ← Anterior
+        </button>
+        <button onclick="nextSlide()" class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full font-bold transition-all duration-300 flex items-center gap-2">
+            Próximo →
+        </button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const totalSlides = 9;
+
+        function showSlide(index) {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show current slide
+            document.getElementById(`slide-${index}`).classList.add('active');
+            
+            // Update counter
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('totalSlides').textContent = totalSlides;
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        function previousSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eb9ae92672df42',t:'MTc1NzgwODAzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
