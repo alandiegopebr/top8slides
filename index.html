@@ -4,22 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apresentação dos Amigos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+        }
         .slide {
             display: none;
+            animation: fadeIn 0.7s;
         }
         .slide.active {
             display: flex;
+            animation: popIn 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
         .image-placeholder {
-            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
-            border: 3px dashed #9ca3af;
+            background: linear-gradient(135deg, #f3f4f6 60%, #e0c3fc 100%);
+            border: 3px dashed #a78bfa;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #6b7280;
-            font-weight: 600;
+            color: #7c3aed;
+            font-weight: 700;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -28,12 +42,20 @@
             width: 100%;
             height: 100vh;
             object-fit: cover;
+            filter: brightness(0.85) blur(1px);
         }
         .friend-image {
-            width: 300px;
-            height: 300px;
+            width: 260px;
+            height: 260px;
             object-fit: cover;
             border-radius: 50%;
+            box-shadow: 0 8px 32px 0 rgba(124,58,237,0.25), 0 1.5px 8px 0 rgba(0,0,0,0.10);
+            border: 5px solid #fff;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .friend-image:hover {
+            transform: scale(1.07) rotate(-2deg);
+            box-shadow: 0 12px 40px 0 #a78bfa99, 0 2px 12px 0 #0002;
         }
         .navigation {
             position: fixed;
@@ -41,12 +63,52 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
+            gap: 1.5rem;
         }
         .slide-counter {
             position: fixed;
             top: 30px;
             right: 30px;
             z-index: 1000;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 12px 0 #0001;
+        }
+        .modern-btn {
+            background: linear-gradient(90deg, #a78bfa 0%, #f472b6 100%);
+            color: #fff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 900;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 999px;
+            box-shadow: 0 4px 16px 0 #a78bfa44;
+            padding: 0.9rem 2.5rem;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .modern-btn:hover {
+            background: linear-gradient(90deg, #f472b6 0%, #a78bfa 100%);
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 8px 32px 0 #f472b655;
+        }
+        .slide .bg-white {
+            background: linear-gradient(120deg, #fff 80%, #e0c3fc 100%);
+            box-shadow: 0 8px 32px 0 #a78bfa22, 0 1.5px 8px 0 #0001;
+        }
+        .slide h2 {
+            font-family: 'Montserrat', Arial, sans-serif;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 600px) {
+            .friend-image {
+                width: 140px;
+                height: 140px;
+            }
+            .slide .bg-white {
+                padding: 1.2rem !important;
+            }
         }
     </style>
 </head>
@@ -58,16 +120,9 @@
     </div>
 
     <!-- Slide 1: Capa -->
-    <div class="slide active min-h-screen flex flex-col justify-center items-center relative" id="slide-0">
-        <div class="image-placeholder cover-image absolute inset-0">
-            <div class="text-2xl">📸 Adicione sua imagem de capa aqui</div>
-        </div>
-        <div class="relative z-10 text-center bg-black/50 backdrop-blur-sm rounded-3xl p-12 mx-4">
-            <h1 class="text-6xl font-bold text-white mb-6 animate-pulse">🎉 OS 8 AMIGOS 🎉</h1>
-            <p class="text-2xl text-yellow-300 mb-8">Uma apresentação épica e hilária!</p>
-            <div class="text-lg text-white/90">
-                Prepare-se para conhecer os personagens mais incríveis desta turma! 😂
-            </div>
+    <div class="slide active min-h-screen flex items-center justify-center bg-black" id="slide-0">
+        <div class="flex flex-col items-center w-full">
+            <img src="capa.png" alt="Capa da apresentação" style="max-width:100vw; max-height:90vh; object-fit:contain; display:block; margin:0 auto; background:#222; border-radius:2rem; box-shadow:0 8px 32px #0005;" />
         </div>
     </div>
 
@@ -75,7 +130,9 @@
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-1">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>Ytallo</div>
+            <div class="flex-shrink-0">
+                <img src="v.png" alt="Foto de Alan Diego" class="friend-image" />
+            </div>
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-purple-600 mb-4">👑 YTALLO</h2>
@@ -87,7 +144,7 @@
                 </p>
                 <div class="bg-red-100 rounded-lg p-4">
                     <strong class="text-red-800">Frase marcante:</strong> 
-                    <em class="text-red-700">"Eu sou o rei aqui!"</em> 👑
+                    <em class="text-red-700">"Melhor não escrever nada..."</em> 👑
                 </div>
             </div>
         </div>
@@ -97,7 +154,9 @@
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-2">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>José Carlos</div>
+            <div class="flex-shrink-0">
+                <img src="carlos.png" alt="Foto de Alan Diego" class="friend-image" />
+            </div>
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-blue-600 mb-4">🩸🗡️⚰️ JOSÉ CARLOS</h2>
@@ -119,7 +178,9 @@
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-3">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>Naman</div>
+            <div class="flex-shrink-0">
+                <img src="kkk.png" alt="Foto de Alan Diego" class="friend-image" />
+            </div>
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-pink-600 mb-4">💀☠️ NAMAN</h2>
@@ -141,7 +202,9 @@
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-4">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>Jonatha</div>
+            <div class="flex-shrink-0">
+                <img src="jonatha.png" alt="Foto de Alan Diego" class="friend-image" />
+            </div>
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-green-600 mb-4">💔 JONATHA</h2>
@@ -163,7 +226,9 @@
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-5">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>Diego</div>
+            <div class="flex-shrink-0">
+                <img src="di.png" alt="Foto de Alan Diego" class="friend-image" />
+            </div>
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-red-600 mb-4"> DIEGO 💔</h2>
@@ -185,7 +250,9 @@
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-6">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>Leandro</div>
+            <div class="flex-shrink-0">
+                <img src="leo.png" alt="Foto de Alan Diego" class="friend-image" />
+            </div>
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-yellow-600 mb-4">🌪️ LEANDRO</h2>
@@ -206,8 +273,8 @@
     <!-- Slide 8: José Everaldo -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-7">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>José Everaldo</div>
+            <div class="flex-shrink-0">
+                <img src="everaldo.png" alt="Foto de José Everaldo" class="friend-image" />
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-indigo-600 mb-4">⚡ JOSÉ EVERALDO 🪄</h2>
@@ -229,7 +296,9 @@
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-8">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
-                <div class="text-sm">📸 Foto do<br>Alan Diego</div>
+            <div class="flex-shrink-0">
+                <img src="eu.png" alt="Foto de Alan Diego" class="friend-image" />
+            </div>
             </div>
             <div class="text-center md:text-left">
                 <h2 class="text-4xl font-bold text-purple-600 mb-4">⭐ ALAN DIEGO 🗿🍷</h2>
@@ -249,10 +318,10 @@
 
     <!-- Navigation -->
     <div class="navigation flex gap-4">
-        <button onclick="previousSlide()" class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full font-bold transition-all duration-300 flex items-center gap-2">
+        <button onclick="previousSlide()" class="modern-btn shadow-lg">
             ← Anterior
         </button>
-        <button onclick="nextSlide()" class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full font-bold transition-all duration-300 flex items-center gap-2">
+        <button onclick="nextSlide()" class="modern-btn shadow-lg">
             Próximo →
         </button>
     </div>
@@ -263,16 +332,26 @@
 
         function showSlide(index) {
             // Hide all slides
-            document.querySelectorAll('.slide').forEach(slide => {
+            document.querySelectorAll('.slide').forEach((slide, i) => {
                 slide.classList.remove('active');
+                slide.setAttribute('aria-hidden', 'true');
+                slide.style.zIndex = 0;
+                slide.style.boxShadow = '';
+                slide.style.border = '';
             });
-            
             // Show current slide
-            document.getElementById(`slide-${index}`).classList.add('active');
-            
+            const activeSlide = document.getElementById(`slide-${index}`);
+            activeSlide.classList.add('active');
+            activeSlide.setAttribute('aria-hidden', 'false');
+            activeSlide.style.zIndex = 10;
+            activeSlide.style.boxShadow = '0 0 0 6px #a78bfa55, 0 8px 32px 0 #a78bfa22';
+            activeSlide.style.border = '3px solid #a78bfa';
             // Update counter
             document.getElementById('currentSlide').textContent = index + 1;
             document.getElementById('totalSlides').textContent = totalSlides;
+            // Focus for accessibility
+            activeSlide.setAttribute('tabindex', '-1');
+            activeSlide.focus();
         }
 
         function nextSlide() {
@@ -292,6 +371,11 @@
             } else if (event.key === 'ArrowLeft') {
                 previousSlide();
             }
+        });
+
+        // Acessibilidade: permitir navegação por Tab
+        document.querySelectorAll('.slide').forEach(slide => {
+            slide.setAttribute('tabindex', '-1');
         });
 
         // Initialize
