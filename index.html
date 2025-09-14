@@ -282,7 +282,7 @@
                     <strong>Apelido:</strong> "Harry Potter, domador de cavalas e fundador da comunidade das mulheres homosexuais" ⚡🐴
                 </div>
                 <p class="text-lg text-gray-600 mb-4">
-                    O inimigo do amor 2.0, o grande mágico que sabe manusear a varinha, o transformador de mulheres, por favor, pare com os cavalos😭😭😭😡🔥🔥
+                    O inimigo do amor 2.0, o grande mágico que sabe manusear a varinha, o transformador de mulheres, por favor, pare com os cavalos😭😭😭🔥🔥
                 </p>
                 <div class="bg-indigo-100 rounded-lg p-4">
                     <strong class="text-indigo-800">Frase marcante:</strong> 
@@ -292,8 +292,21 @@
         </div>
     </div>
 
-    <!-- Slide 9: Alan Diego -->
+    <!-- Slide 9: Vídeo Especial -->
     <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-8">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-3xl w-full flex flex-col items-center gap-8">
+            <h2 class="text-4xl font-bold text-pink-600 mb-6 text-center w-full">🎬 Momento Especial</h2>
+            <div class="w-full flex justify-center">
+                <video id="videoEspecial" controls preload="auto" style="max-width: 720px; width: 100%; border-radius: 1.5rem; box-shadow: 0 8px 32px #a78bfa22; background: #000; display: block; margin: 0 auto;">
+                    <source src="video.mp4" type="video/mp4">
+                    Seu navegador não suporta o elemento de vídeo.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Alan Diego -->
+    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-9">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center gap-8">
             <div class="image-placeholder friend-image flex-shrink-0">
             <div class="flex-shrink-0">
@@ -327,8 +340,16 @@
     </div>
 
     <script>
+        // Forçar o vídeo a iniciar com som (se permitido pelo navegador)
+        document.addEventListener('DOMContentLoaded', function() {
+            var video = document.getElementById('videoEspecial');
+            if(video) {
+                video.volume = 1.0;
+                video.muted = false;
+            }
+        });
         let currentSlideIndex = 0;
-        const totalSlides = 9;
+    const totalSlides = 10;
 
         function showSlide(index) {
             // Hide all slides
