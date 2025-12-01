@@ -74,6 +74,10 @@
             <p>Modo</p>
             <strong id="mode-label">Manual</strong>
           </article>
+          <article>
+            <p>Aurora</p>
+            <strong id="aurora-state">Dormindo</strong>
+          </article>
         </div>
 
         <div class="slider-row">
@@ -120,9 +124,18 @@
           <label for="glitch">Probabilidade de glitch <span id="glitch-readout">5%</span></label>
           <input id="glitch" type="range" min="0" max="35" value="5" />
         </div>
+        <div class="slider-stack">
+          <label for="swing">Swing prismático <span id="swing-readout">00%</span></label>
+          <input id="swing" type="range" min="0" max="60" value="0" />
+        </div>
+        <div class="slider-stack">
+          <label for="humanize">Humanize melódico <span id="humanize-readout">08%</span></label>
+          <input id="humanize" type="range" min="0" max="40" value="8" />
+        </div>
         <div class="lab-actions">
           <button id="drop" type="button">Lançar drop</button>
         </div>
+        <p class="lab-note">Mantenha o hype no topo para provocar tempestades Aurora e ver o playground retocar tudo sozinho.</p>
       </section>
 
       <section class="sequencer" aria-live="polite">

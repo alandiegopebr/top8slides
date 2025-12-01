@@ -337,6 +337,12 @@ input[type="range"]::-moz-range-thumb {
   gap: 0.8rem;
 }
 
+.lab-note {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.5;
+}
+
 .sequencer header {
   display: flex;
   justify-content: space-between;

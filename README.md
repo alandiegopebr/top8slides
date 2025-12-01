@@ -14,19 +14,30 @@ combos, cumpre missões e mantém o hype ativo como se fosse um idle game artís
 6. Ative **Fluxo automático** e deixe o palco gerar ideias sozinho enquanto o hype sobe.
 7. Use **Misturar etapas** quando quiser embaralhar todas as batidas em um clique.
 8. **Limpar palco** reinicia tudo para outra maratona criativa.
+9. No **Sound Lab**, ajuste **Polirritmia**, **Glitch**, **Swing prismático** e **Humanize** para controlar micro variações de tempo e timbre.
+10. Suba hype (>95) + streak (>60) para acordar a **Tempestade Aurora** — o sistema dispara pulsos extras, acende melodias e contabiliza a conquista no HUD.
 
 ## Por que prende
 
 - **Feed de combos** registra tudo com timestamp, dando senso de progresso contínuo.
 - **Hype/Streak bars** reagem instantaneamente à interação, incentivando sessões longas.
 - **Missões diárias** (germinar X pulsos, combos, tempo em auto flow) adicionam metas claras.
+- **Tempestades Aurora** surgem quando você mantém hype alto; são micro eventos que iluminam melodias, contam uma história no feed e liberam um boost visual/sonoro.
 - **Loops sonoros**: cada pulso tem timbre, frequência e etapa diferentes; quando sincroniza, toca e pisca.
 - **Auto flow** funciona como um modo idle — ótimo para deixar rolando e voltar a brincar.
 
+## Novidades sonoras
+
+- **Swing prismático**: adiciona atraso nos contratempos, deixando o groove com cara de MPC.
+- **Humanize melódico**: injeta pequenas variações de afinação e tempo para quebrar a sensação de loop perfeito.
+- **Aurora HUD**: novo card mostra se o evento está dormindo, em recarga ou no meio da tempestade.
+- **Tempestade Aurora**: quando ativa, spawna pulsos extras, reacende passos dos sequencers, aumenta a barra de melodias e desbloqueia uma meta dedicada.
+
 ## Hackeie o garden
 
-- Ajuste `MAX_PULSES`, `notePool` ou `waves` em `app.js` para mudar densidade sonora.
+- Ajuste `MAX_PULSES`, `kits` ou `waves` em `app.js` para mudar densidade sonora.
 - Reescreva `questConfig` para criar desafios próprios (ex.: streak 80+, combos 5x).
+- Brinque com `state.swing`, `state.humanize` e o cálculo de `getSwingDelay()` para criar sensações diferentes (drum'n'bass reto, boom bap, etc.).
 - Troque cores, gradientes e efeitos em `style.css` para novos moods (cyberpunk, vapor, pastel).
 - Altere as mensagens do feed (`pushFeed`) para narrativas personalizadas ou idioma diferente.
 

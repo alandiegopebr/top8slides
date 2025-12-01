@@ -14,6 +14,7 @@ const refs = {
   laneCount: document.getElementById("lane-count"),
   melodyBar: document.getElementById("melody-bar"),
   modeLabel: document.getElementById("mode-label"),
+  auroraState: document.getElementById("aurora-state"),
   feedList: document.getElementById("feed-list"),
   questList: document.getElementById("quest-list"),
   shuffleBeats: document.getElementById("shuffle-beats"),
@@ -28,6 +29,10 @@ const refs = {
   polyReadout: document.getElementById("poly-readout"),
   glitch: document.getElementById("glitch"),
   glitchReadout: document.getElementById("glitch-readout"),
+  swing: document.getElementById("swing"),
+  swingReadout: document.getElementById("swing-readout"),
+  humanize: document.getElementById("humanize"),
+  humanizeReadout: document.getElementById("humanize-readout"),
   drop: document.getElementById("drop"),
   addLane: document.getElementById("add-lane"),
   randomizeLanes: document.getElementById("randomize-lanes"),
@@ -98,6 +103,12 @@ const questConfig = [
     label: "Lance 1 drop",
     goal: 1,
     metric: () => state.stats.drops
+  },
+  {
+    id: "aurora",
+    label: "Provoque 1 tempestade Aurora",
+    goal: 1,
+    metric: () => state.stats.storms
   }
 ];
 
@@ -108,11 +119,16 @@ const state = {
   melodyStep: 0,
   polyrhythm: 16,
   glitch: 5,
+  swing: 0,
+  humanize: 8,
   kit: "synthwave",
   fx: { reverb: false, delay: false, crush: false },
   lanes: [],
   beatTimer: null,
   autoLoop: null,
+  events: {
+    aurora: { active: false, remaining: 0, cooldown: 0 }
+  },
   stats: {
     hype: 0,
     streak: 0,
@@ -120,7 +136,8 @@ const state = {
     totalSeeds: 0,
     autoSeconds: 0,
     melodyScore: 0,
-    drops: 0
+    drops: 0,
+    storms: 0
   },
   feed: []
 };
@@ -146,6 +163,8 @@ function init() {
   setKit(state.kit);
   setPolyrhythm(state.polyrhythm);
   setGlitch(state.glitch);
+  setSwing(state.swing);
+  setHumanize(state.humanize);
   addLane();
   addLane();
   pushFeed("Abra o palco, escolha um kit e comece o beat garden.");
@@ -169,6 +188,8 @@ function wireEvents() {
 
   refs.poly.addEventListener("input", (event) => setPolyrhythm(Number(event.target.value)));
   refs.glitch.addEventListener("input", (event) => setGlitch(Number(event.target.value)));
+  refs.swing.addEventListener("input", (event) => setSwing(Number(event.target.value)));
+  refs.humanize.addEventListener("input", (event) => setHumanize(Number(event.target.value)));
 
   refs.field.addEventListener("click", (event) => {
     if (event.target !== refs.field) return;
@@ -261,6 +282,18 @@ function setGlitch(value) {
   state.glitch = value;
   refs.glitch.value = String(value);
   refs.glitchReadout.textContent = `${value}%`;
+}
+
+function setSwing(value) {
+  state.swing = value;
+  refs.swing.value = String(value);
+  refs.swingReadout.textContent = `${value.toString().padStart(2, "0")}%`;
+}
+
+function setHumanize(value) {
+  state.humanize = value;
+  refs.humanize.value = String(value);
+  refs.humanizeReadout.textContent = `${value.toString().padStart(2, "0")}%`;
 }
 
 function spawnPulse(pos = {}) {
@@ -390,12 +423,13 @@ function stepBeat(intervalMs) {
   state.beat = (state.beat + 1) % 8;
   state.melodyStep = (state.melodyStep + 1) % state.polyrhythm;
   const active = [];
+  const swingPhase = state.beat % 2 ? "late" : null;
   state.pulses.forEach((pulse) => {
     const hit = pulse.beatStep === state.beat;
     pulse.node.classList.toggle("is-hot", hit);
     if (hit) {
       active.push(pulse);
-      playNote({ freq: pulse.freq, wave: pulse.wave });
+      playNote({ freq: pulse.freq, wave: pulse.wave, feel: { swingPhase, humanize: true } });
     }
   });
   if (active.length >= 3) {
@@ -403,6 +437,7 @@ function stepBeat(intervalMs) {
   }
   triggerMelodyStep();
   maybeGlitch();
+  handleAuroraBeat();
   if (state.autoLoop) {
     state.stats.autoSeconds += intervalMs / 1000;
   }
@@ -414,11 +449,18 @@ function triggerMelodyStep() {
   if (!state.lanes.length) return;
   let hits = 0;
   const kit = kits[state.kit];
+  const swingPhase = state.melodyStep % 2 ? "late" : null;
   state.lanes.forEach((lane) => {
     if (!lane.pattern[state.melodyStep]) return;
     hits += 1;
     const freq = lane.notes[state.melodyStep];
-    playNote({ freq, wave: lane.wave || kit.melodyWave, gain: 0.2, duration: 0.45 });
+    playNote({
+      freq,
+      wave: lane.wave || kit.melodyWave,
+      gain: 0.2,
+      duration: 0.45,
+      feel: { swingPhase, humanize: true }
+    });
   });
   if (hits) {
     state.stats.melodyScore = clamp(state.stats.melodyScore + hits * 3, 0, 150);
@@ -438,6 +480,57 @@ function maybeGlitch() {
   lane.pattern[index] = !lane.pattern[index];
   renderLanes();
   pushFeed(`Glitch remixou ${lane.name} passo ${index + 1}.`);
+}
+
+function handleAuroraBeat() {
+  const aurora = state.events.aurora;
+  if (aurora.active) {
+    aurora.remaining -= 1;
+    spawnPulse();
+    if (!state.lanes.length) {
+      addLane();
+    } else {
+      const lane = randomItem(state.lanes);
+      igniteLaneStep(lane);
+      renderLanes();
+    }
+    incrementHype(3);
+    bumpStreak(2);
+    state.stats.melodyScore = clamp(state.stats.melodyScore + 5, 0, 200);
+    if (aurora.remaining <= 0) {
+      endAuroraStorm();
+    }
+    return;
+  }
+  if (aurora.cooldown > 0) {
+    aurora.cooldown = Math.max(0, aurora.cooldown - 1);
+    if (aurora.cooldown > 0) return;
+  }
+  if (state.lanes.length && state.stats.hype >= 95 && state.stats.streak >= 60) {
+    startAuroraStorm();
+  }
+}
+
+function startAuroraStorm() {
+  const aurora = state.events.aurora;
+  aurora.active = true;
+  aurora.remaining = 12;
+  aurora.cooldown = 0;
+  state.stats.storms += 1;
+  pushFeed("Tempestade Aurora abriu um portal harmônico!");
+  if (!state.lanes.length) {
+    addLane();
+  }
+  state.stats.melodyScore = clamp(state.stats.melodyScore + 15, 0, 200);
+  renderQuests();
+  updateStatsUI();
+}
+
+function endAuroraStorm() {
+  const aurora = state.events.aurora;
+  aurora.active = false;
+  aurora.cooldown = 24;
+  pushFeed("Aurora se dissipou, resta só o brilho.");
 }
 
 function registerCombo(size) {
@@ -486,6 +579,7 @@ function triggerDrop() {
   bumpStreak(18);
   state.stats.melodyScore = clamp(state.stats.melodyScore + 25, 0, 180);
   state.stats.drops += 1;
+  state.events.aurora.cooldown = Math.max(0, state.events.aurora.cooldown - 6);
   updateStatsUI();
   renderQuests();
   pushFeed("DROP lançado! Hype e melodias explodiram.");
@@ -516,6 +610,12 @@ function updateStatsUI() {
   refs.laneCount.textContent = state.lanes.length.toString().padStart(2, "0");
   refs.melodyBar.style.width = `${Math.min(state.stats.melodyScore, 100)}%`;
   refs.modeLabel.textContent = state.autoLoop ? "Fluxo livre" : "Manual";
+  const aurora = state.events.aurora;
+  refs.auroraState.textContent = aurora.active
+    ? "Tempestade"
+    : aurora.cooldown > 0
+      ? "Recarga"
+      : "Dormindo";
 }
 
 function renderQuests() {
@@ -634,6 +734,12 @@ function randomizeLanes() {
   pushFeed("Melodias embaralhadas.");
 }
 
+function igniteLaneStep(lane) {
+  const index = Math.floor(Math.random() * state.polyrhythm);
+  lane.pattern[index] = true;
+  return index;
+}
+
 function pushFeed(text) {
   state.feed.unshift({ text, time: new Date().toLocaleTimeString("pt-BR", { minute: "2-digit", second: "2-digit" }) });
   state.feed = state.feed.slice(0, FEED_LIMIT);
@@ -658,47 +764,65 @@ function ensureAudio() {
   }
 }
 
-function playNote({ freq, wave, duration = 0.35, gain = 0.25, startOffset = 0, detune = 0, flags = {} }) {
+function playNote({ freq, wave, duration = 0.35, gain = 0.25, startOffset = 0, detune = 0, feel = {}, flags = {} }) {
   if (!audio.ctx) return;
   const ctx = audio.ctx;
+  let offset = startOffset;
+  let finalFreq = freq;
+
+  if (feel.swingPhase === "late" && state.swing > 0 && !flags.swingReplica) {
+    offset += getSwingDelay();
+  }
+
+  if (feel.humanize && state.humanize > 0 && !flags.humanizeReplica) {
+    const timingDrift = (state.humanize / 100) * 0.08;
+    offset += randomBetween(0, timingDrift);
+    const centsSpan = (state.humanize / 100) * 60;
+    const detuneCents = randomBetween(-centsSpan, centsSpan);
+    finalFreq *= Math.pow(2, detuneCents / 1200);
+  }
+
+  offset = Math.max(0, offset);
   const osc = ctx.createOscillator();
   const amp = ctx.createGain();
   osc.type = wave;
-  osc.frequency.value = freq;
+  osc.frequency.value = finalFreq;
   osc.detune.value = detune;
   if (state.fx.crush && !flags.crushReplica) {
     const curve = new Float32Array(6);
     for (let i = 0; i < curve.length; i += 1) {
-      curve[i] = freq + (i % 2 === 0 ? 18 : -18);
+      curve[i] = finalFreq + (i % 2 === 0 ? 18 : -18);
     }
-    osc.frequency.setValueCurveAtTime(curve, ctx.currentTime + startOffset, duration);
+    osc.frequency.setValueCurveAtTime(curve, ctx.currentTime + offset, duration);
   }
-  amp.gain.setValueAtTime(0, ctx.currentTime + startOffset);
-  amp.gain.linearRampToValueAtTime(gain, ctx.currentTime + startOffset + 0.01);
-  amp.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startOffset + duration);
+  amp.gain.setValueAtTime(0, ctx.currentTime + offset);
+  amp.gain.linearRampToValueAtTime(gain, ctx.currentTime + offset + 0.01);
+  amp.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + duration);
   osc.connect(amp).connect(audio.master);
-  osc.start(ctx.currentTime + startOffset);
-  osc.stop(ctx.currentTime + startOffset + duration + 0.1);
+  osc.start(ctx.currentTime + offset);
+  osc.stop(ctx.currentTime + offset + duration + 0.1);
 
   if (state.fx.delay && !flags.delayReplica) {
     playNote({
-      freq: freq * 0.98,
+      freq: finalFreq * 0.98,
       wave,
       duration: duration * 0.8,
       gain: gain * 0.45,
-      startOffset: startOffset + 0.18,
-      flags: { delayReplica: true }
+      startOffset: offset + 0.18,
+      feel: { humanize: false },
+      flags: { delayReplica: true, swingReplica: true, humanizeReplica: true }
     });
   }
   if (state.fx.reverb && !flags.reverbReplica) {
     playNote({
-      freq: freq * 0.5,
+      freq: finalFreq * 0.5,
       wave: "sine",
       duration: duration * 1.4,
       gain: gain * 0.35,
-      startOffset: startOffset + 0.03,
+      startOffset: offset + 0.03,
       detune: 20,
-      flags: { reverbReplica: true }
+      feel: { humanize: false },
+      flags: { reverbReplica: true, swingReplica: true, humanizeReplica: true }
     });
   }
 }
@@ -709,6 +833,11 @@ function randomBetween(min, max) {
 
 function randomItem(list) {
   return list[Math.floor(Math.random() * list.length)];
+}
+
+function getSwingDelay() {
+  const stepSeconds = (60 / state.bpm) / 2;
+  return (state.swing / 100) * stepSeconds * 0.75;
 }
 
 function wrap(value, min, max) {
