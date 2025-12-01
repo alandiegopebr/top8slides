@@ -1,0 +1,557 @@
+:root {
+  color-scheme: dark;
+  --bg: #01040f;
+  --surface: rgba(10, 14, 32, 0.85);
+  --surface-strong: rgba(28, 34, 70, 0.92);
+  --border: rgba(255, 255, 255, 0.15);
+  --text: #f4f7ff;
+  --accent: #63f6c5;
+  --accent-2: #ff8dd6;
+  --accent-3: #7aa0ff;
+  --card: rgba(255, 255, 255, 0.04);
+  --radius: 28px;
+  font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  transition: color 200ms ease, background 200ms ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #15224d, var(--bg));
+  color: var(--text);
+  padding: 3rem clamp(1rem, 5vw, 5rem) 4rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+#aether {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(300px, 2fr) minmax(220px, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: center;
+}
+
+.hero-copy p {
+  line-height: 1.6;
+  max-width: 60ch;
+}
+
+.hero-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+}
+
+.hero-card h2,
+.soundlab h2,
+.sequencer h2,
+.quests h2 {
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.hero-card ul {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.eyebrow {
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4.4rem);
+  margin: 0.4rem 0 0.7rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+button {
+  border: none;
+  background: var(--surface-strong);
+  color: var(--text);
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+button:hover,
+button:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(127, 160, 255, 0.4);
+}
+
+button[aria-pressed="true"],
+button[data-state="active"],
+.chip.active {
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  color: #041020;
+  border-color: transparent;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.8rem;
+}
+
+.grid > section {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1.4rem;
+}
+
+.stage,
+.quests {
+  grid-column: 1 / -1;
+}
+
+.stage-field {
+  position: relative;
+  height: clamp(360px, 55vh, 540px);
+  border-radius: calc(var(--radius) - 12px);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.08), transparent),
+    radial-gradient(circle at 70% 40%, rgba(255, 255, 255, 0.06), transparent);
+  overflow: hidden;
+}
+
+.stage-hint {
+  margin-top: 1rem;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.hud,
+.soundlab,
+.sequencer,
+.quests {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.9rem;
+}
+
+.stat-grid article {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-grid p {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.stat-grid strong {
+  font-size: 1.8rem;
+}
+
+.bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  margin-top: 0.4rem;
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  width: 20%;
+  transition: width 200ms ease;
+}
+
+.slider-row,
+.slider-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.slider-row label,
+.slider-stack label {
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(120deg, var(--accent-3), var(--accent-2));
+  box-shadow: 0 0 18px rgba(122, 160, 255, 0.6);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(120deg, var(--accent-3), var(--accent-2));
+  border: none;
+  box-shadow: 0 0 18px rgba(122, 160, 255, 0.6);
+}
+
+.feed {
+  background: var(--card);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem;
+}
+
+.feed header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.feed h2 {
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.feed ul {
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.feed li {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding: 0.5rem 0.6rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.soundlab p,
+.sequencer p {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+.kit-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.fx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.6rem;
+}
+
+.fx-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+.fx-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.lab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.sequencer header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lane-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.lane-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lane-empty {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.lane {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.9rem;
+}
+
+.lane header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.lane header strong {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lane-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(42px, 1fr));
+  gap: 0.4rem;
+}
+
+.lane-step {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: border 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.lane-step[aria-pressed="true"] {
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  color: #041020;
+  border-color: transparent;
+  box-shadow: 0 0 12px rgba(99, 246, 197, 0.3);
+}
+
+.quests ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.quest-card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.quest-card strong {
+  font-size: 1.05rem;
+}
+
+.quest-progress {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.quest-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+}
+
+.quest-card[data-complete="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(99, 246, 197, 0.3);
+}
+
+.footnote {
+  margin-top: 2.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.pulse {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.pulse:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+.pulse-ring,
+.pulse-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.pulse-ring {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 70%);
+  filter: blur(6px);
+  animation: orb-breathe 4s ease-in-out infinite;
+}
+
+.pulse-core {
+  width: 55%;
+  height: 55%;
+  margin: auto;
+  box-shadow: 0 0 22px rgba(99, 246, 197, 0.4);
+  background: radial-gradient(circle, #fff, var(--accent));
+}
+
+.pulse-label {
+  position: absolute;
+  bottom: -1.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pulse.is-hot .pulse-core {
+  transform: scale(1.1);
+  box-shadow: 0 0 28px rgba(255, 141, 214, 0.6);
+}
+
+.pulse.is-hot .pulse-ring {
+  animation-duration: 1.2s;
+}
+
+@keyframes orb-breathe {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1100px) {
+  body {
+    padding: 2.5rem 1.5rem 3rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid .quests {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-field {
+    height: 320px;
+  }
+
+  .lane-actions {
+    flex-direction: column;
+  }
+}

@@ -1,490 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apresentação dos Amigos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .nav-arrow {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 54px;
-            height: 54px;
-            background: #fff;
-            color: #a78bfa;
-            font-size: 2.2rem;
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-weight: 900;
-            border: 2.5px solid #a78bfa;
-            border-radius: 50%;
-            box-shadow: 0 2px 16px #a78bfa33, 0 1.5px 8px #0001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s, transform 0.2s;
-            outline: none;
-            opacity: 0.98;
-        }
-        .nav-arrow:focus {
-            outline: 3px solid #a78bfa;
-            border-color: #f472b6;
-        }
-        .nav-arrow:hover {
-            background: #a78bfa;
-            color: #fff;
-            border-color: #f472b6;
-            transform: translateY(-50%) scale(1.13) rotate(-2deg);
-            box-shadow: 0 8px 32px #f472b655, 0 2px 12px #0002;
-        }
-        .left-arrow {
-            left: 24px;
-        }
-        .right-arrow {
-            right: 24px;
-        }
-        @media (max-width: 900px) {
-            .nav-arrow {
-                width: 36px;
-                height: 36px;
-                font-size: 1.1rem;
-            }
-            .left-arrow { left: 2px; }
-            .right-arrow { right: 2px; }
-        }
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background: linear-gradient(120deg, #f3e7e9 0%, #e3eeff 100%);
-        }
-        .slide {
-            display: none;
-            animation: fadeIn 0.7s;
-        }
-        .slide.active {
-            display: flex;
-            animation: popIn 0.7s cubic-bezier(.68,-0.55,.27,1.55);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.95); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .slide .bg-white {
-            background: rgba(255,255,255,0.25);
-            box-shadow: 0 8px 32px 0 #a78bfa33, 0 1.5px 8px 0 #0001;
-            backdrop-filter: blur(16px) saturate(1.2);
-            border-radius: 2.5rem;
-            border: 1.5px solid #fff3;
-        }
-        .slide h2, .slide h1 {
-            font-family: 'Montserrat', Arial, sans-serif;
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, #a78bfa 0%, #f472b6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 2px 12px #a78bfa33;
-        }
-        .friend-image {
-            width: 220px;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 8px 32px 0 #a78bfa33, 0 1.5px 8px 0 #0001;
-            border: 4px solid #fff;
-            transition: transform 0.3s, box-shadow 0.3s;
-            background: #fff8;
-        }
-        .friend-image:hover {
-            transform: scale(1.09) rotate(-2deg);
-            box-shadow: 0 16px 48px 0 #f472b655, 0 2px 12px 0 #0002;
-        }
-        .cover-image {
-            width: 100%;
-            height: 100vh;
-            object-fit: cover;
-            filter: brightness(0.92) blur(0.5px);
-            border-radius: 2rem;
-            box-shadow: 0 8px 32px #a78bfa33;
-        }
-        .navigation {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            gap: 1.5rem;
-        }
-        .slide-counter {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 1000;
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-            box-shadow: 0 2px 12px 0 #a78bfa33;
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(8px);
-        }
-        .modern-btn {
-            background: linear-gradient(90deg, #a78bfa 0%, #f472b6 100%);
-            color: #fff;
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-weight: 900;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 999px;
-            box-shadow: 0 4px 16px 0 #a78bfa44;
-            padding: 0.9rem 2.5rem;
-            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            outline: none;
-        }
-        .modern-btn:focus {
-            outline: 3px solid #a78bfa;
-        }
-        .modern-btn:hover {
-            background: linear-gradient(90deg, #f472b6 0%, #a78bfa 100%);
-            transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 8px 32px 0 #f472b655;
-        }
-        .bg-red-100, .bg-blue-100, .bg-pink-100, .bg-yellow-100, .bg-indigo-100, .bg-purple-100 {
-            background: rgba(255,255,255,0.45) !important;
-            border-radius: 1.2rem;
-            box-shadow: 0 2px 8px #a78bfa11;
-        }
-        .text-lg, .text-xl, .text-2xl, .text-4xl, .text-6xl {
-            text-shadow: 0 1px 4px #fff8;
-        }
-        @media (max-width: 900px) {
-            .friend-image {
-                width: 140px;
-                height: 140px;
-            }
-            .slide .bg-white {
-                padding: 1.2rem !important;
-            }
-            .cover-image {
-                height: 60vw;
-            }
-        }
-        @media (max-width: 600px) {
-            .friend-image {
-                width: 90px;
-                height: 90px;
-            }
-            .slide .bg-white {
-                padding: 0.5rem !important;
-            }
-            .cover-image {
-                height: 40vw;
-            }
-        }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 font-sans">
-    
-    <!-- Fundo animado -->
-    <div id="bg-animated"></div>
-    <!-- Slide Counter -->
-    <div class="slide-counter px-6 py-3 text-white font-extrabold shadow-lg" style="background:rgba(30,30,60,0.25);backdrop-filter:blur(8px);border-radius:2rem;">
-    <span id="currentSlide">1</span> / <span id="totalSlides">10</span>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arcade Prisma — Beat Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="aether" aria-hidden="true"></canvas>
 
-    <!-- Slide 1: Capa -->
-    <div class="slide active min-h-screen flex items-center justify-center bg-black" id="slide-0">
-        <div class="flex flex-col items-center w-full">
-            <img src="capa.png" alt="Capa da apresentação" style="max-width:100vw; max-height:80vh; object-fit:contain; display:block; margin:0 auto; background:#222; border-radius:2.5rem; box-shadow:0 12px 48px #a78bfa55; border:8px solid #fff8;" />
-            <h1 class="text-6xl font-extrabold mt-10 mb-4 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-lg animate-pulse" style="letter-spacing:2px;">OS 8 AMIGOS</h1>
-            <p class="text-2xl text-white/90 font-bold mb-2 text-center">Uma apresentação épica e hilária!</p>
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Beat Garden 1.0</p>
+        <h1>Arcade Prisma</h1>
+        <p>
+          Um playground sonoro/cromático feito para jovens perderem a noção do tempo. Gere batidas, combine
+          pulsos, libere combos e mantenha o hype vivo com streaks, missões, kits sonoros e sequências melódicas
+          mutantes.
+        </p>
+        <div class="hero-actions">
+          <button id="spawn" type="button">Criar batida</button>
+          <button id="auto" type="button" aria-pressed="false">Fluxo automático</button>
+          <button id="audio" type="button">Ativar áudio</button>
+          <button id="clear" type="button">Limpar palco</button>
         </div>
-    </div>
+      </div>
+      <div class="hero-card">
+        <h2>Por que vicia?</h2>
+        <ul>
+          <li>Loops que mudam a cada gesto.</li>
+          <li>Combos, drops e glitchs desbloqueiam narrativas raras.</li>
+          <li>Missões, kits e sequenciador mantêm o foco prolongado.</li>
+        </ul>
+      </div>
+    </header>
 
-    <!-- Slide 2: Ytallo -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-1">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-            <div class="flex-shrink-0">
-                <img src="v.png" alt="Foto de Alan Diego" class="friend-image" />
-            </div>
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-purple-600 mb-4">👑 YTALLO</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "Rei deles" 👑
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    É o cubytallo, não tem muito o que falar sobre ele, esse só trás confusão!!! 💔💣
-                </p>
-                <div class="bg-red-100 rounded-lg p-4">
-                    <strong class="text-red-800">Frase marcante:</strong> 
-                    <em class="text-red-700">"Melhor não escrever nada..."</em> 👑
-                </div>
-            </div>
+    <main class="grid">
+      <section class="stage" aria-label="Palco interativo">
+        <div id="field" class="stage-field" role="presentation"></div>
+        <p class="stage-hint">
+          Clique para plantar batidas, arraste para redesenhar órbitas, sincronize combos, drops e glitchs.
+        </p>
+      </section>
+
+      <section class="hud" aria-live="polite">
+        <div class="stat-grid">
+          <article>
+            <p>Pulsos</p>
+            <strong id="pulse-count">00</strong>
+          </article>
+          <article>
+            <p>Hype</p>
+            <strong id="hype-value">00</strong>
+            <div class="bar"><span id="hype-bar"></span></div>
+          </article>
+          <article>
+            <p>Streak</p>
+            <strong id="streak-value">00</strong>
+            <div class="bar"><span id="streak-bar"></span></div>
+          </article>
+          <article>
+            <p>Melodias</p>
+            <strong id="lane-count">00</strong>
+            <div class="bar"><span id="melody-bar"></span></div>
+          </article>
+          <article>
+            <p>Modo</p>
+            <strong id="mode-label">Manual</strong>
+          </article>
         </div>
-    </div>
 
-    <!-- Slide 3: José Carlos -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-2">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-            <div class="flex-shrink-0">
-                <img src="carlos.png" alt="Foto de Alan Diego" class="friend-image" />
-            </div>
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-blue-600 mb-4">🩸🗡️⚰️ JOSÉ CARLOS</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "Lula, faz o L" 
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    Simplismente não sei de nada, eu não vejo ele, somente as tatuagens flutuando 👻🎨
-                </p>
-                <div class="bg-blue-100 rounded-lg p-4">
-                    <strong class="text-blue-800">Frase marcante:</strong> 
-                    <em class="text-blue-700">"LEANDRO PARA DE RESPIRAR, TÔ FICANDO SEM AR! 💀☠️"</em>
-                </div>
-            </div>
+        <div class="slider-row">
+          <label for="bpm">Ritmo do universo <span id="bpm-readout">96 BPM</span></label>
+          <input id="bpm" type="range" min="70" max="160" value="96" />
         </div>
-    </div>
 
-    <!-- Slide 4: Amigo 3 -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-3">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-            <div class="flex-shrink-0">
-                <img src="kkk.png" alt="Foto de Alan Diego" class="friend-image" />
-            </div>
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-pink-600 mb-4">💀☠️ NAMAN</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "Hornet da Silva" 
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    O suposto quietinho, mas se se soltar saia da frente 🔥🔥🔥🔥
-                </p>
-                <div class="bg-pink-100 rounded-lg p-4">
-                    <strong class="text-pink-800">Frase marcante:</strong> 
-                    <em class="text-pink-700">"Eu quero jogar silksong 💔"</em>
-                </div>
-            </div>
+        <div class="feed">
+          <header>
+            <h2>Feed de combos</h2>
+            <button id="shuffle-beats" type="button">Misturar etapas</button>
+          </header>
+          <ul id="feed-list"></ul>
         </div>
-    </div>
+      </section>
 
-    <!-- Slide 5: Jonatha -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-4">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-            <div class="flex-shrink-0">
-                <img src="jonatha.png" alt="Foto de Alan Diego" class="friend-image" />
-            </div>
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-green-600 mb-4">💔 JONATHA</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "Inimigo do namoro" 💔
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    É simplesmente o arqui rival do cupido💘💔
-                </p>
-                <div class="bg-red-100 rounded-lg p-4">
-                    <strong class="text-red-800">Frase marcante:</strong> 
-                    <em class="text-red-700">"PARA ALAN!!! 💢😡"</em>
-                </div>
-            </div>
+      <section class="soundlab">
+        <h2>Sound Lab</h2>
+        <p>Escolha kits, efeitos e ajustes finos para desbloquear novas atmosferas.</p>
+        <div class="kit-selector" role="group" aria-label="Kits sonoros">
+          <button class="chip" data-kit="synthwave">Synthwave</button>
+          <button class="chip" data-kit="jungle">Jungle Nebulosa</button>
+          <button class="chip" data-kit="hyperpop">Hyperpop Prisma</button>
         </div>
-    </div>
-
-    <!-- Slide 6: Diego -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-5">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-            <div class="flex-shrink-0">
-                <img src="di.png" alt="Foto de Alan Diego" class="friend-image" />
-            </div>
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-red-600 mb-4"> DIEGO 💔</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "O incansável" ⚡
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    Para mano, por favor para😭😭😭😭😭
-                </p>
-                <div class="bg-red-100 rounded-lg p-4">
-                    <strong class="text-red-800">Frase marcante:</strong> 
-                    <em class="text-red-700">"Eu vou me trancar no quarto e sumir por uma semana para jogar silksong"</em> 🎮
-                </div>
-            </div>
+        <div class="fx-grid">
+          <label class="fx-toggle">
+            <input type="checkbox" id="fx-reverb" />
+            <span>Reverb nebuloso</span>
+          </label>
+          <label class="fx-toggle">
+            <input type="checkbox" id="fx-delay" />
+            <span>Delay orbital</span>
+          </label>
+          <label class="fx-toggle">
+            <input type="checkbox" id="fx-crush" />
+            <span>Bitcrush glitch</span>
+          </label>
         </div>
-    </div>
-
-    <!-- Slide 7: Leandro -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-6">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-            <div class="flex-shrink-0">
-                <img src="leo.png" alt="Foto de Alan Diego" class="friend-image" />
-            </div>
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-yellow-600 mb-4">🌪️ LEANDRO</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "Aspirador de pó" 🌪️
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    Se o cara respirar fundo a Terra some, então amigo nunca respire fundo! 😜🤭
-                </p>
-                <div class="bg-yellow-100 rounded-lg p-4">
-                    <strong class="text-yellow-800">Frase marcante:</strong> 
-                    <em class="text-yellow-700">"Fé"</em> 🙏
-                </div>
-            </div>
+        <div class="slider-stack">
+          <label for="poly">Polirritmia <span id="poly-readout">16 passos</span></label>
+          <input id="poly" type="range" min="8" max="24" step="2" value="16" />
         </div>
-    </div>
-
-    <!-- Slide 8: José Everaldo -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-7">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="flex-shrink-0">
-                <img src="everaldo.png" alt="Foto de José Everaldo" class="friend-image" />
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-indigo-600 mb-4">⚡ JOSÉ EVERALDO 🪄</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "Harry Potter, domador de cavalas e fundador da comunidade das mulheres homosexuais" ⚡🐴
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    O inimigo do amor 2.0, o grande mágico que sabe manusear a varinha, o transformador de mulheres, por favor, pare com os cavalos😭😭😭🔥🔥
-                </p>
-                <div class="bg-indigo-100 rounded-lg p-4">
-                    <strong class="text-indigo-800">Frase marcante:</strong> 
-                    <em class="text-indigo-700">"Você quer ver minha lista das meninas cavala, morena?"</em> 📜
-                </div>
-            </div>
+        <div class="slider-stack">
+          <label for="glitch">Probabilidade de glitch <span id="glitch-readout">5%</span></label>
+          <input id="glitch" type="range" min="0" max="35" value="5" />
         </div>
-    </div>
-
-    <!-- Slide 9: Vídeo Especial -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-8">
-        <div class="glass-card w-full flex flex-col items-center justify-center">
-            <h2 class="text-5xl font-extrabold mb-8 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-lg animate-pulse" style="letter-spacing:2px;">🎬 Momento Especial</h2>
-            <div class="flex justify-center items-center w-full">
-                <div style="background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%); padding: 8px; border-radius: 2.5rem; box-shadow: 0 12px 48px #a78bfa55, 0 2px 12px #0002; animation: borderPulse 2s infinite alternate;">
-                    <video id="videoEspecial" controls preload="auto" style="max-width: 900px; width: 90vw; min-width: 280px; border-radius: 2rem; background: #000; display: block; box-shadow: 0 8px 32px #a78bfa55; outline: none;">
-                        <source src="video.mp4" type="video/mp4">
-                        Seu navegador não suporta o elemento de vídeo.
-                    </video>
-                </div>
-            </div>
+        <div class="lab-actions">
+          <button id="drop" type="button">Lançar drop</button>
         </div>
-        <style>
-        @keyframes borderPulse {
-            0% { box-shadow: 0 0 0 8px #f472b655, 0 8px 32px #a78bfa55; }
-            100% { box-shadow: 0 0 0 20px #a78bfa33, 0 16px 64px #f472b655; }
-        }
-        </style>
-    </div>
+      </section>
 
-    <!-- Slide 9: Alan Diego -->
-    <div class="slide min-h-screen flex items-center justify-center p-8" id="slide-9">
-    <div class="glass-card max-w-3xl w-full flex flex-col md:flex-row items-center gap-8">
-            <div class="image-placeholder friend-image flex-shrink-0">
-            <div class="flex-shrink-0">
-                <img src="eu.png" alt="Foto de Alan Diego" class="friend-image" />
-            </div>
-            </div>
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl font-bold text-purple-600 mb-4">⭐ ALAN DIEGO 🗿🍷</h2>
-                <div class="text-xl text-gray-700 mb-4">
-                    <strong>Apelido:</strong> "A perfeição" ⭐
-                </div>
-                <p class="text-lg text-gray-600 mb-4">
-                    É tão perfeito que palavras não podem descrever ele! 🔥🔥🔥
-                </p>
-                <div class="bg-purple-100 rounded-lg p-4">
-                    <strong class="text-purple-800">Frase marcante:</strong> 
-                    <em class="text-purple-700">"Naman é gay! 🤭"</em>
-                </div>
-            </div>
-        </div>
-    </div>
+      <section class="sequencer" aria-live="polite">
+        <header>
+          <div>
+            <h2>Melodias prismáticas</h2>
+            <p>Monte arpejos, polirritmos e surpresas harmônicas.</p>
+          </div>
+          <div class="lane-actions">
+            <button id="add-lane" type="button">Adicionar melodia</button>
+            <button id="randomize-lanes" type="button">Caos melódico</button>
+          </div>
+        </header>
+        <div id="lane-list" class="lane-list" aria-label="Sequenciador"></div>
+        <p id="lane-empty" class="lane-empty">Nenhuma melodia ativa — clique em "Adicionar" para começar.</p>
+      </section>
 
-    <!-- Navigation -->
-    <!-- Navegação por teclado ativada, setas removidas -->
+      <section class="quests">
+        <h2>Missões de hoje</h2>
+        <ul id="quest-list"></ul>
+      </section>
+    </main>
 
-    <script>
-        // Forçar o vídeo a iniciar com som (se permitido pelo navegador)
-        document.addEventListener('DOMContentLoaded', function() {
-            var video = document.getElementById('videoEspecial');
-            if(video) {
-                video.volume = 1.0;
-                video.muted = false;
-                video.style.outline = 'none';
-            }
-        });
-        let currentSlideIndex = 0;
-    const totalSlides = 10;
+    <footer class="footnote">
+      <p>Arcade experimental para hackear o tédio e manter jovens em estado de flow.</p>
+    </footer>
 
-        function showSlide(index) {
-            // Hide all slides
-            document.querySelectorAll('.slide').forEach((slide, i) => {
-                slide.classList.remove('active');
-                slide.setAttribute('aria-hidden', 'true');
-                slide.style.zIndex = 0;
-                slide.style.boxShadow = '';
-                slide.style.border = '';
-            });
-            // Show current slide
-            const activeSlide = document.getElementById(`slide-${index}`);
-            activeSlide.classList.add('active');
-            activeSlide.setAttribute('aria-hidden', 'false');
-            activeSlide.style.zIndex = 10;
-            activeSlide.style.boxShadow = '0 0 0 6px #a78bfa55, 0 8px 32px 0 #a78bfa22';
-            activeSlide.style.border = '3px solid #a78bfa';
-            // Update counter
-            document.getElementById('currentSlide').textContent = index + 1;
-            document.getElementById('totalSlides').textContent = totalSlides;
-            // Focus for accessibility
-            activeSlide.setAttribute('tabindex', '-1');
-            activeSlide.focus();
-        }
+    <template id="pulse-template">
+      <button class="pulse" type="button">
+        <span class="pulse-ring"></span>
+        <span class="pulse-core"></span>
+        <span class="pulse-label"></span>
+      </button>
+    </template>
 
-        function nextSlide() {
-            currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
-            showSlide(currentSlideIndex);
-        }
-
-        function previousSlide() {
-            currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
-            showSlide(currentSlideIndex);
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'ArrowRight' || event.key === ' ') {
-                nextSlide();
-            } else if (event.key === 'ArrowLeft') {
-                previousSlide();
-            }
-        });
-
-        // Acessibilidade: permitir navegação por Tab
-        document.querySelectorAll('.slide').forEach(slide => {
-            slide.setAttribute('tabindex', '-1');
-        });
-
-        // Initialize
-        showSlide(0);
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eb9ae92672df42',t:'MTc1NzgwODAzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    <script src="app.js" type="module"></script>
+  </body>
 </html>
