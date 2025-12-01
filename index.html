@@ -153,6 +153,62 @@
         <p id="lane-empty" class="lane-empty">Nenhuma melodia ativa — clique em "Adicionar" para começar.</p>
       </section>
 
+      <section class="scene-forge">
+        <header>
+          <div>
+            <h2>Scene Forge</h2>
+            <p>Capture snapshots do palco e componha arranjos em slots.</p>
+          </div>
+          <div class="scene-actions">
+            <button id="capture-scene" type="button">Capturar cena</button>
+            <button id="export-project" type="button">Exportar mix</button>
+          </div>
+        </header>
+        <ul id="scene-list" class="scene-list" aria-label="Slots de cena">
+          <li>
+            <button class="scene-slot" data-slot="0">
+              <strong>Slot 01</strong>
+              <span data-slot-label="0">Vazio</span>
+            </button>
+            <button class="scene-play" data-slot="0">Carregar</button>
+          </li>
+          <li>
+            <button class="scene-slot" data-slot="1">
+              <strong>Slot 02</strong>
+              <span data-slot-label="1">Vazio</span>
+            </button>
+            <button class="scene-play" data-slot="1">Carregar</button>
+          </li>
+          <li>
+            <button class="scene-slot" data-slot="2">
+              <strong>Slot 03</strong>
+              <span data-slot-label="2">Vazio</span>
+            </button>
+            <button class="scene-play" data-slot="2">Carregar</button>
+          </li>
+          <li>
+            <button class="scene-slot" data-slot="3">
+              <strong>Slot 04</strong>
+              <span data-slot-label="3">Vazio</span>
+            </button>
+            <button class="scene-play" data-slot="3">Carregar</button>
+          </li>
+        </ul>
+        <p class="scene-note">Slots salvam pulsos, kit, BPM, swing/humanize e padrões. Carregue para continuar de onde parou.</p>
+      </section>
+
+      <section class="chord-loom">
+        <h2>Chord Loom</h2>
+        <p>Dispare progressões vivas para alimentar o sequenciador ou gerar novas melodias.</p>
+        <div class="chord-grid" role="group" aria-label="Pads harmônicos">
+          <button class="chord-pad" data-chord="sunrise">Sunrise Neon</button>
+          <button class="chord-pad" data-chord="glow">Glow Cascade</button>
+          <button class="chord-pad" data-chord="flux">Flux Mirage</button>
+          <button class="chord-pad" data-chord="gravity">Zero Gravity</button>
+        </div>
+        <p class="chord-note">Cada pad injeta vozes no mix atual, gera eventos no feed e aumenta a barra de melodias.</p>
+      </section>
+
       <section class="quests">
         <h2>Missões de hoje</h2>
         <ul id="quest-list"></ul>

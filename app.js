@@ -37,7 +37,11 @@ const refs = {
   addLane: document.getElementById("add-lane"),
   randomizeLanes: document.getElementById("randomize-lanes"),
   laneList: document.getElementById("lane-list"),
-  laneEmpty: document.getElementById("lane-empty")
+  laneEmpty: document.getElementById("lane-empty"),
+  captureScene: document.getElementById("capture-scene"),
+  exportProject: document.getElementById("export-project"),
+  sceneList: document.getElementById("scene-list"),
+  chordPads: Array.from(document.querySelectorAll(".chord-pad"))
 };
 
 const kits = {
@@ -77,6 +81,13 @@ const kits = {
     waves: ["triangle", "sine"],
     melodyWave: "sine"
   }
+};
+
+const chordPresets = {
+  sunrise: { label: "Sunrise Neon", steps: [0, 4, 7, 11], boost: 10 },
+  glow: { label: "Glow Cascade", steps: [0, 5, 9, 12], boost: 8 },
+  flux: { label: "Flux Mirage", steps: [0, 3, 7, 10], boost: 9 },
+  gravity: { label: "Zero Gravity", steps: [-5, 0, 5, 9], boost: 11 }
 };
 
 const questConfig = [
@@ -129,6 +140,8 @@ const state = {
   events: {
     aurora: { active: false, remaining: 0, cooldown: 0 }
   },
+  scenes: Array.from({ length: 4 }, () => null),
+  sceneCursor: 0,
   stats: {
     hype: 0,
     streak: 0,
@@ -165,6 +178,7 @@ function init() {
   setGlitch(state.glitch);
   setSwing(state.swing);
   setHumanize(state.humanize);
+  renderSceneLabels();
   addLane();
   addLane();
   pushFeed("Abra o palco, escolha um kit e comece o beat garden.");
@@ -179,6 +193,15 @@ function wireEvents() {
   refs.addLane.addEventListener("click", addLane);
   refs.randomizeLanes.addEventListener("click", randomizeLanes);
   refs.laneList.addEventListener("click", handleLaneInteraction);
+  if (refs.captureScene) {
+    refs.captureScene.addEventListener("click", () => captureScene(state.sceneCursor));
+  }
+  if (refs.exportProject) {
+    refs.exportProject.addEventListener("click", exportProject);
+  }
+  if (refs.sceneList) {
+    refs.sceneList.addEventListener("click", handleSceneListInteraction);
+  }
 
   refs.bpm.addEventListener("input", (event) => {
     state.bpm = Number(event.target.value);
@@ -190,6 +213,16 @@ function wireEvents() {
   refs.glitch.addEventListener("input", (event) => setGlitch(Number(event.target.value)));
   refs.swing.addEventListener("input", (event) => setSwing(Number(event.target.value)));
   refs.humanize.addEventListener("input", (event) => setHumanize(Number(event.target.value)));
+
+  if (refs.chordPads.length) {
+    refs.chordPads.forEach((pad) => {
+      pad.addEventListener("click", () => {
+        triggerChord(pad.dataset.chord);
+        pad.classList.add("active");
+        setTimeout(() => pad.classList.remove("active"), 320);
+      });
+    });
+  }
 
   refs.field.addEventListener("click", (event) => {
     if (event.target !== refs.field) return;
@@ -561,12 +594,16 @@ function toggleAuto() {
 }
 
 function clearStage() {
-  state.pulses.forEach((pulse) => pulse.node.remove());
-  state.pulses = [];
+  removeAllPulses();
   state.stats.hype = 0;
   state.stats.streak = 0;
   updateStatsUI();
   pushFeed("Palco resetado. Recomece a sessão.");
+}
+
+function removeAllPulses() {
+  state.pulses.forEach((pulse) => pulse.node.remove());
+  state.pulses = [];
 }
 
 function triggerDrop() {
@@ -645,6 +682,7 @@ function addLane() {
   renderLanes();
   updateStatsUI();
   pushFeed(`${lane.name} entrou no sequenciador.`);
+  return lane;
 }
 
 function createLane() {
@@ -738,6 +776,222 @@ function igniteLaneStep(lane) {
   const index = Math.floor(Math.random() * state.polyrhythm);
   lane.pattern[index] = true;
   return index;
+}
+
+function handleSceneListInteraction(event) {
+  const slotButton = event.target.closest(".scene-slot");
+  const playButton = event.target.closest(".scene-play");
+  if (slotButton) {
+    captureScene(Number(slotButton.dataset.slot));
+  }
+  if (playButton) {
+    loadScene(Number(playButton.dataset.slot));
+  }
+}
+
+function captureScene(slotIndex = 0) {
+  const index = clamp(Math.round(slotIndex), 0, state.scenes.length - 1);
+  const snapshot = serializeScene();
+  state.scenes[index] = snapshot;
+  state.sceneCursor = (index + 1) % state.scenes.length;
+  updateSceneSlotLabel(index);
+  pushFeed(`Cena salva em ${String(index + 1).padStart(2, "0")} com ${snapshot.pulses.length} pulsos.`);
+}
+
+function serializeScene() {
+  return {
+    kit: state.kit,
+    bpm: state.bpm,
+    swing: state.swing,
+    humanize: state.humanize,
+    polyrhythm: state.polyrhythm,
+    glitch: state.glitch,
+    fx: { ...state.fx },
+    pulses: state.pulses.map((pulse) => ({
+      id: pulse.id,
+      beatStep: pulse.beatStep,
+      freq: pulse.freq,
+      wave: pulse.wave,
+      x: pulse.x,
+      y: pulse.y,
+      vx: pulse.vx,
+      vy: pulse.vy,
+      size: pulse.size
+    })),
+    lanes: state.lanes.map((lane) => ({
+      id: lane.id,
+      name: lane.name,
+      notes: [...lane.notes],
+      pattern: [...lane.pattern],
+      scaleName: lane.scaleName,
+      wave: lane.wave
+    })),
+    stats: {
+      hype: state.stats.hype,
+      melodyScore: state.stats.melodyScore
+    },
+    capturedAt: new Date().toISOString()
+  };
+}
+
+function loadScene(slotIndex) {
+  const index = clamp(Math.round(slotIndex), 0, state.scenes.length - 1);
+  const scene = state.scenes[index];
+  if (!scene) {
+    pushFeed("Slot vazio — capture algo primeiro.");
+    return;
+  }
+  removeAllPulses();
+  state.lanes = [];
+  refs.laneEmpty.style.display = "block";
+  setKit(scene.kit);
+  state.bpm = scene.bpm;
+  refs.bpm.value = String(scene.bpm);
+  refs.bpmReadout.textContent = `${scene.bpm} BPM`;
+  restartBeatTimer();
+  setPolyrhythm(scene.polyrhythm);
+  setGlitch(scene.glitch);
+  setSwing(scene.swing);
+  setHumanize(scene.humanize);
+  state.fx = { ...scene.fx };
+  Object.entries(refs.fx).forEach(([name, input]) => {
+    input.checked = !!state.fx[name];
+  });
+  scene.pulses.forEach((pulse) => spawnPulseFromScene(pulse));
+  state.lanes = scene.lanes.map((lane) => ({
+    ...lane,
+    pattern: [...lane.pattern],
+    notes: [...lane.notes]
+  }));
+  renderLanes();
+  state.stats.hype = scene.stats?.hype ?? state.stats.hype;
+  state.stats.melodyScore = scene.stats?.melodyScore ?? state.stats.melodyScore;
+  updateStatsUI();
+  renderQuests();
+  pushFeed(`Cena ${String(index + 1).padStart(2, "0")} carregada (${scene.kit}).`);
+}
+
+function spawnPulseFromScene(data) {
+  const node = refs.template.content.firstElementChild.cloneNode(true);
+  const pulse = {
+    ...data,
+    dragging: false,
+    node
+  };
+  refs.field.appendChild(node);
+  state.pulses.push(pulse);
+  updatePulseVisual(pulse);
+  pulse.node.setAttribute("aria-label", `Pulso ${pulse.id} na etapa ${pulse.beatStep + 1}`);
+  enableDragging(pulse);
+  const width = refs.field.clientWidth || 1;
+  const height = refs.field.clientHeight || 1;
+  node.style.transform = `translate(${pulse.x * width}px, ${pulse.y * height}px) scale(${pulse.size})`;
+}
+
+function renderSceneLabels() {
+  document.querySelectorAll("[data-slot-label]").forEach((label) => {
+    const index = Number(label.dataset.slotLabel);
+    const scene = state.scenes[index];
+    if (!scene) {
+      label.textContent = "Vazio";
+      return;
+    }
+    label.textContent = `${scene.kit} · ${scene.pulses.length}P/${scene.lanes.length}M`;
+  });
+  if (!refs.sceneList) return;
+  refs.sceneList.querySelectorAll(".scene-slot").forEach((slot) => {
+    const idx = Number(slot.dataset.slot);
+    slot.dataset.filled = state.scenes[idx] ? "true" : "false";
+  });
+}
+
+function updateSceneSlotLabel(slotIndex) {
+  const label = document.querySelector(`[data-slot-label="${slotIndex}"]`);
+  const scene = state.scenes[slotIndex];
+  if (label) {
+    label.textContent = scene ? `${scene.kit} · ${scene.pulses.length}P/${scene.lanes.length}M` : "Vazio";
+  }
+  if (refs.sceneList) {
+    const slot = refs.sceneList.querySelector(`.scene-slot[data-slot="${slotIndex}"]`);
+    if (slot) {
+      slot.dataset.filled = scene ? "true" : "false";
+    }
+  }
+}
+
+function exportProject() {
+  const payload = {
+    generatedAt: new Date().toISOString(),
+    version: "1.1",
+    kit: state.kit,
+    bpm: state.bpm,
+    swing: state.swing,
+    humanize: state.humanize,
+    polyrhythm: state.polyrhythm,
+    glitch: state.glitch,
+    fx: { ...state.fx },
+    stats: { ...state.stats },
+    pulses: state.pulses.map((pulse) => ({
+      id: pulse.id,
+      beatStep: pulse.beatStep,
+      freq: pulse.freq,
+      wave: pulse.wave,
+      x: pulse.x,
+      y: pulse.y,
+      vx: pulse.vx,
+      vy: pulse.vy,
+      size: pulse.size
+    })),
+    lanes: state.lanes.map((lane) => ({
+      id: lane.id,
+      name: lane.name,
+      notes: [...lane.notes],
+      pattern: [...lane.pattern],
+      scaleName: lane.scaleName,
+      wave: lane.wave
+    })),
+    scenes: state.scenes
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `arcade-prisma-${Date.now()}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  pushFeed("Projeto exportado em JSON — importe no futuro ou compartilhe com amigos.");
+}
+
+function triggerChord(name) {
+  const preset = chordPresets[name];
+  if (!preset) return;
+  ensureAudio();
+  const kit = kits[state.kit];
+  const root = randomItem(kit.melodyRoots);
+  preset.steps.forEach((step, index) => {
+    const freq = root * Math.pow(2, step / 12);
+    playNote({
+      freq,
+      wave: kit.melodyWave,
+      gain: 0.3,
+      duration: 0.6 + index * 0.05,
+      startOffset: index * 0.03,
+      feel: { humanize: true }
+    });
+  });
+  let lane = state.lanes.length ? randomItem(state.lanes) : addLane();
+  if (!lane && state.lanes.length) {
+    lane = randomItem(state.lanes);
+  }
+  igniteLaneStep(lane);
+  renderLanes();
+  incrementHype(6);
+  bumpStreak(4);
+  state.stats.melodyScore = clamp(state.stats.melodyScore + preset.boost, 0, 200);
+  updateStatsUI();
+  pushFeed(`Pad ${preset.label} adicionou camadas cintilantes.`);
 }
 
 function pushFeed(text) {
